@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Wear Jetpack Compose</string>
+    <string name="form_factor">Square</string>
+</resources>
