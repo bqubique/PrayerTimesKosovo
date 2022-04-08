@@ -9,27 +9,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.*
 import com.bqubique.wearjetpackcompose.R
 import com.bqubique.wearjetpackcompose.viewmodel.PrayerTimesViewModel
-import java.util.*
 
 @OptIn(ExperimentalWearMaterialApi::class)
 @Composable
-fun PrayerTimesList(prayerTimesViewModel: PrayerTimesViewModel, scalingLazyListState: ScalingLazyListState) {
+fun PrayerTimesList(
+    prayerTimesViewModel: PrayerTimesViewModel,
+    scalingLazyListState: ScalingLazyListState
+) {
     val formFactor = stringResource(id = R.string.form_factor)
     val prayerTimes = prayerTimesViewModel.prayerTimes.observeAsState()
     val loading = prayerTimesViewModel.loading.observeAsState()
-//    val scalingLazyListState = rememberScalingLazyListState()
+    val nextPrayer = prayerTimesViewModel.nextPrayer.observeAsState()
 
     Scaffold(
         vignette = { Vignette(vignettePosition = VignettePosition.TopAndBottom) },
         timeText = { TimeText() },
         positionIndicator = { PositionIndicator(scalingLazyListState = scalingLazyListState) }
     ) {
+        Log.d("PrayerTimesList", "PrayerTimesList: ${nextPrayer.value}")
+
         if (loading.value!!)
             CircularProgressIndicator(
                 modifier = Modifier.fillMaxSize(),
@@ -48,13 +54,16 @@ fun PrayerTimesList(prayerTimesViewModel: PrayerTimesViewModel, scalingLazyListS
             ) {
 
                 item {
-                    AppCard(
+                    TitleCard(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(start = 10.dp, end = 10.dp, top = 40.dp, bottom = 10.dp),
-                        onClick = { /*TODO*/ },
-                        appName = { Text("Imsaku") },
-                        time = { },
+                        onClick = {},
+//                        backgroundPainter = CardDefaults.imageWithScrimBackgroundPainter(
+//                            backgroundImagePainter = painterResource(id = R.drawable.sunset),
+//                        ),
+                        backgroundPainter = if (nextPrayer.value == 0) CardDefaults.imageWithScrimBackgroundPainter(painterResource(id = R.drawable.sunset)) else CardDefaults.cardBackgroundPainter(),
+                        time = { Text("Imsaku") },
                         title = {
                             Text(
                                 text = prayerTimes.value?.get(0)?.imsaku.toString(),
@@ -64,13 +73,13 @@ fun PrayerTimesList(prayerTimesViewModel: PrayerTimesViewModel, scalingLazyListS
                     ) {}
                 }
                 item {
-                    AppCard(
+                    TitleCard(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-                        onClick = { /*TODO*/ },
-                        appName = { Text("Sabahu") },
-                        time = { },
+                        onClick = {},
+                        backgroundPainter = if (nextPrayer.value == 1) CardDefaults.imageWithScrimBackgroundPainter(painterResource(id = R.drawable.sunset)) else CardDefaults.cardBackgroundPainter(),
+                        time = { Text("Sabahu") },
                         title = {
                             Text(
                                 text = prayerTimes.value?.get(0)?.sabahu.toString(),
@@ -80,79 +89,85 @@ fun PrayerTimesList(prayerTimesViewModel: PrayerTimesViewModel, scalingLazyListS
                     ) {}
                 }
                 item {
-                    AppCard(
+                    TitleCard(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-                        onClick = { /*TODO*/ },
-                        appName = { Text("Lindja e Diellit") },
-                        time = { },
+                        onClick = {},
+                        backgroundPainter = if (nextPrayer.value == 2) CardDefaults.imageWithScrimBackgroundPainter(painterResource(id = R.drawable.sunset)) else CardDefaults.cardBackgroundPainter(),
+                        time = { Text("Lindja e Diellit") },
                         title = {
                             Text(
-                                prayerTimes.value?.get(0)?.lindjaDiellit.toString(),
+                                text = prayerTimes.value?.get(0)?.lindjaDiellit.toString(),
                                 color = Color(0xffffc400)
                             )
-                        }) {}
+                        },
+                    ) {}
                 }
                 item {
-                    AppCard(
+                    TitleCard(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-                        onClick = { /*TODO*/ },
-                        appName = { Text("Dreka") },
-                        time = { },
+                        onClick = {},
+                        backgroundPainter = if (nextPrayer.value == 3) CardDefaults.imageWithScrimBackgroundPainter(painterResource(id = R.drawable.sunset)) else CardDefaults.cardBackgroundPainter(),
+                        time = { Text("Dreka") },
                         title = {
                             Text(
-                                prayerTimes.value?.get(0)?.dreka.toString(),
+                                text = prayerTimes.value?.get(0)?.dreka.toString(),
                                 color = Color(0xffffc400)
                             )
-                        }) {}
+                        },
+                    ) {}
                 }
                 item {
-                    AppCard(
+                    TitleCard(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-                        onClick = { /*TODO*/ },
-                        appName = { Text("Ikindia") },
-                        time = { },
+                        onClick = {},
+                        backgroundPainter = if (nextPrayer.value == 4) CardDefaults.imageWithScrimBackgroundPainter(painterResource(id = R.drawable.sunset)) else CardDefaults.cardBackgroundPainter(),
+                        time = { Text("Ikindia") },
                         title = {
                             Text(
-                                prayerTimes.value?.get(0)?.ikindia.toString(),
+                                text = prayerTimes.value?.get(0)?.ikindia.toString(),
                                 color = Color(0xffffc400)
                             )
-                        }) {}
+                        },
+                    ) {}
                 }
                 item {
-                    AppCard(
+                    TitleCard(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-                        onClick = { /*TODO*/ },
-                        appName = { Text("Akshami") },
-                        time = { },
+                        onClick = {},
+                        backgroundPainter = if (nextPrayer.value == 5) CardDefaults.imageWithScrimBackgroundPainter(painterResource(id = R.drawable.sunset)) else CardDefaults.cardBackgroundPainter(),
+                        time = { Text("Akshami") },
                         title = {
                             Text(
-                                prayerTimes.value?.get(0)?.akshami.toString(),
+                                text = prayerTimes.value?.get(0)?.akshami.toString(),
                                 color = Color(0xffffc400)
                             )
-                        }) {}
+                        },
+                    ) {}
                 }
                 item {
-                    AppCard(
+                    TitleCard(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-                        onClick = { /*TODO*/ },
-                        appName = { Text("Jacia") },
-                        time = { },
+                            .padding(start = 10.dp, end = 10.dp, bottom = 0.dp),
+                        onClick = {},
+                        backgroundPainter = if (nextPrayer.value == 6) CardDefaults.imageWithScrimBackgroundPainter(painterResource(id = R.drawable.sunset)) else CardDefaults.cardBackgroundPainter(),
+
+                        time = { Text("Jacia") },
                         title = {
                             Text(
-                                prayerTimes.value?.get(0)?.jacia.toString(),
+                                text = prayerTimes.value?.get(0)?.jacia.toString(),
                                 color = Color(0xffffc400)
                             )
-                        }) {}
+                        },
+                    ) {}
                 }
             }
     }

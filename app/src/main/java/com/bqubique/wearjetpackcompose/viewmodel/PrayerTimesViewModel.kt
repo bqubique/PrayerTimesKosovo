@@ -48,7 +48,6 @@ class PrayerTimesViewModel @Inject constructor(
 
     private fun selectCurrentPrayer() {
         if (_prayerTimes.value.isNullOrEmpty().not()) {
-            Log.d(TAG, "selectCurrentPrayer: HELLO FROM")
             val prayerTimesHours = listOf(
                 _prayerTimes.value?.get(0)?.imsaku?.substringBefore(":")?.toInt()!!,
                 _prayerTimes.value?.get(0)?.sabahu?.substringBefore(":")?.toInt()!!,
@@ -76,101 +75,90 @@ class PrayerTimesViewModel @Inject constructor(
 
             val time: LocalTime = LocalTime.of(currentHour, currentMinute)
 
-            for (prayerTime in prayerTimesHours.indices) {
-
-                if (prayerTimesHours[prayerTime] > currentHour) {
-                    when (prayerTime) {
+            for (i in prayerTimesHours.indices) {
+                if (prayerTimesHours[i]!! > currentHour) {
+                    when (i) {
                         0 -> {
-                            Log.d("PrayerTimesList", "Imsak")
+                            //Imsak
                             _nextPrayer.value = 0
                             return
                         }
                         1 -> {
-                            Log.d("PrayerTimesList", "Morning")
+                            //Fajr
                             _nextPrayer.value = 1
                             return
                         }
                         2 -> {
-                            Log.d("PrayerTimesList", "Sunrise")
+                            //Sunrise
                             _nextPrayer.value = 2
                             return
                         }
                         3 -> {
-                            Log.d(TAG, "selectCurrentPrayer: ${prayerTimesHours[3]} ${prayerTimesMinutes[3]}")
-                            Log.d(TAG, "selectCurrentPrayer: --->>> ${rightNow.get(Calendar.HOUR_OF_DAY)} ${rightNow.get(Calendar.MINUTE)}")
-                            var date = Date(2022, 4, 4, prayerTimesHours[3], prayerTimesMinutes[3])
-                            var date2 = Date(
-                                2022,
-                                4,
-                                4,
-                                rightNow.get(Calendar.HOUR_OF_DAY),
-                                rightNow.get(Calendar.MINUTE)
-                            )
-
-
-
-                            val diff: Long = date.time.minus(date2.time)
-                            val seconds = diff / 1000
-                            val minutes = seconds / 60
-                            val hours = minutes / 60
-                            Log.d(TAG, "selectCurrentPrayer: $hours :: $minutes")
+                            //Dhuhr
                             _nextPrayer.value = 3
                             return
                         }
                         4 -> {
-                            Log.d("PrayerTimesList", "Asr")
+                            //Asr
                             _nextPrayer.value = 4
                             return
                         }
                         5 -> {
-                            Log.d("PrayerTimesList", "Maghrib")
+                            //Maghrib
                             _nextPrayer.value = 5
                             return
                         }
                         6 -> {
-                            Log.d("PrayerTimesList", "Isha")
+                            //Isha
                             _nextPrayer.value = 6
                             return
                         }
                     }
-                } else if (prayerTimesHours[prayerTime] == currentHour) {
-                    if (prayerTimesMinutes[prayerTime]!! <= currentMinute) {
-                        when (prayerTime) {
+                } else if (prayerTimesHours[i]!! == currentHour) {
+                    if (prayerTimesMinutes[i]!! <= currentMinute) {
+                        when (i) {
                             0 -> {
-                                Log.d("PrayerTimesList", "Imsak")
+                                //Imsak
+                                _nextPrayer.value = 0
                                 return
                             }
                             1 -> {
-                                Log.d("PrayerTimesList", "Fajr")
+                                //Fajr
+                                _nextPrayer.value = 1
                                 return
                             }
                             2 -> {
-                                Log.d("PrayerTimesList", "Sunrise")
+                                //Sunrise
+                                _nextPrayer.value = 2
                                 return
                             }
                             3 -> {
-                                Log.d("PrayerTimesList", "Dhuhr")
-
+                                //Dhuhr
+                                _nextPrayer.value = 3
                                 return
                             }
                             4 -> {
-                                Log.d("PrayerTimesList", "Asr")
-
+                                //Asr
+                                _nextPrayer.value = 4
                                 return
                             }
                             5 -> {
-                                Log.d("PrayerTimesList", "Maghrib")
+                                //Maghrib
+                                _nextPrayer.value = 5
                                 return
                             }
                             6 -> {
-                                Log.d("PrayerTimesList", "Isha")
+                                //Isha
+                                _nextPrayer.value = 6
                                 return
                             }
                         }
                     }
+                } else {
+                    //Imsak
+                    _nextPrayer.value = 0
                 }
             }
-
         }
     }
 }
