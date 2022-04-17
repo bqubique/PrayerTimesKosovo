@@ -13,8 +13,8 @@ buildscript {
         // in the individual module build.gradle files
     }
     ext {
-        compose_version = '1.2.0-alpha06'
-        wear_compose_version = '1.0.0-alpha19'
+        compose_version = '1.2.0-alpha07'
+        wear_compose_version = '1.0.0-alpha20'
         activity_compose_version = '1.4.0'
     }
 }
