@@ -1,10 +1,12 @@
 package com.bqubique.takvimi_wearos_compose.view.home
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -25,7 +27,8 @@ import java.util.concurrent.TimeUnit
 
 @Composable
 fun HomeScreen(
-    homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
+    scalingLazyListState: ScalingLazyListState,
 ) {
     val currentDate = LocalDateTime.now()
 
@@ -51,9 +54,9 @@ fun HomeScreen(
                     )
                 })
             }) {
-
             ScalingLazyColumn(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                state = scalingLazyListState,
             ) {
                 item {
                     Text(
@@ -65,14 +68,23 @@ fun HomeScreen(
                 }
                 itemsIndexed(listOfPrayerTimes.value!!) { index, _ ->
                     TitleCard(
-                        modifier = Modifier.height(70.dp),
+                        modifier = Modifier.height(if (getNextPrayer(prayerTimes = listOfPrayerTimes.value!!) == index) 100.dp else 70.dp),
                         onClick = { },
-                        title = { Text(getPrayerName(index)) },
+                        title = {
+                            Text(
+                                getPrayerName(index),
+                                style = if (getNextPrayer(prayerTimes = listOfPrayerTimes.value!!) == index) TextStyle(
+                                    color = MaterialTheme.colors.onPrimary,
+                                    fontWeight = FontWeight.Bold,
+                                ) else TextStyle()
+                            )
+                        },
                         backgroundPainter = if (getNextPrayer(prayerTimes = listOfPrayerTimes.value!!) == index) CardDefaults.imageWithScrimBackgroundPainter(
                             backgroundImagePainter = painterResource(id = getRandomImage(index)),
                             backgroundImageScrimBrush = Brush.horizontalGradient(
                                 listOf(
-                                    MaterialTheme.colors.onPrimary.copy(alpha = 0.7f),
+                                    MaterialTheme.colors.primary,
+                                    MaterialTheme.colors.primary.copy(alpha = 0.7f),
                                     Color.Transparent
                                 )
                             )
@@ -81,6 +93,7 @@ fun HomeScreen(
                             backgroundImageScrimBrush = Brush.horizontalGradient(
                                 listOf(
                                     Color.Black.copy(alpha = 0.7f),
+                                    Color.Black.copy(alpha = 0.6f),
                                     Color.Transparent,
                                 )
                             )
@@ -92,7 +105,11 @@ fun HomeScreen(
                                 Text(
                                     it.replace(
                                         " ", ""
-                                    )
+                                    ),
+                                    style = if (getNextPrayer(prayerTimes = listOfPrayerTimes.value!!) == index) TextStyle(
+                                        color = MaterialTheme.colors.onPrimary,
+                                        fontWeight = FontWeight.Bold
+                                    ) else TextStyle()
                                 )
                             }
                         },
@@ -101,7 +118,9 @@ fun HomeScreen(
             }
         }
     } else {
-        CircularProgressIndicator()
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
     }
 }
 
