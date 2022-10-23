@@ -4,6 +4,8 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -17,6 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import androidx.wear.compose.material.*
 import com.bqubique.takvimi_wearos_compose.util.*
 import com.bqubique.takvimi_wearos_compose.view.theme.md_theme_dark_primary
@@ -31,7 +35,8 @@ fun HomeScreen(
     scalingLazyListState: ScalingLazyListState,
     alarmManager: AlarmManager,
     pendingIntentMap: Map<String, PendingIntent>,
-) {
+    navController: NavHostController = rememberNavController(),
+    ) {
     val currentDate = LocalDateTime.now()
 
     val isLoading = homeScreenViewModel.loading.observeAsState()
@@ -57,11 +62,11 @@ fun HomeScreen(
                 })
             }) {
             LaunchedEffect(Unit) {
-                setAlarms(
-                    prayerTimes = listOfPrayerTimes.value!!,
-                    alarmManager = alarmManager,
-                    pendingIntentMap = pendingIntentMap,
-                )
+//                setAlarms(
+//                    prayerTimes = listOfPrayerTimes.value!!,
+//                    alarmManager = alarmManager,
+//                    pendingIntentMap = pendingIntentMap,
+//                )
             }
             ScalingLazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -123,6 +128,13 @@ fun HomeScreen(
                             }
                         },
                     ) {}
+                }
+                item{
+                    Button(onClick = {
+                        navController.navigate("settings_screen")
+                    }) {
+                        Icon(Icons.Rounded.Settings, contentDescription = "Settings Screen")
+                    }
                 }
             }
         }

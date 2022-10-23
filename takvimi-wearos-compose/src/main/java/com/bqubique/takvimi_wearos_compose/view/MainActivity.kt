@@ -7,12 +7,20 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
 import androidx.wear.compose.material.ScalingLazyListState
 import androidx.wear.compose.material.rememberScalingLazyListState
+import androidx.wear.compose.navigation.SwipeDismissableNavHost
+import androidx.wear.compose.navigation.composable
+import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import com.bqubique.takvimi_wearos_compose.services.AlarmReceiver
 
 import com.bqubique.takvimi_wearos_compose.view.home.HomeScreen
+import com.bqubique.takvimi_wearos_compose.view.settings.SettingsScreen
 import com.bqubique.takvimi_wearos_compose.view.theme.WearJetpackComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,40 +40,38 @@ class MainActivity : ComponentActivity() {
         setContent {
             scalingLazyListState = rememberScalingLazyListState()
             WearJetpackComposeTheme {
-                HomeScreen(
-                    scalingLazyListState = scalingLazyListState,
-                    alarmManager = alarmManager!!,
-                    pendingIntentMap = pendingIntentMap
-                )
+                PrayerTimesApp(alarmManager = alarmManager, pendingIntentMap = pendingIntentMap)
             }
         }
     }
 
-    private fun createIntentMap(): Map<String,PendingIntent>{
+    private fun createIntentMap(): Map<String, PendingIntent> {
         val map = mutableMapOf<String, PendingIntent>()
 
-        val sunriseAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java, ).let { intent ->
-            PendingIntent.getBroadcast(
-                applicationContext,
-                0,
-                intent.putExtra("prayerTimeId", 0),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
+        val sunriseAlarmIntent =
+            Intent(applicationContext, AlarmReceiver::class.java).let { intent ->
+                PendingIntent.getBroadcast(
+                    applicationContext,
+                    0,
+                    intent.putExtra("prayerTimeId", 0),
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
         map["sunrise"] = sunriseAlarmIntent
 
-        val preSunriseAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java, ).let { intent ->
-            PendingIntent.getBroadcast(
-                applicationContext,
-                1,
-                intent.putExtra("prayerTimeId", 1),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
+        val preSunriseAlarmIntent =
+            Intent(applicationContext, AlarmReceiver::class.java).let { intent ->
+                PendingIntent.getBroadcast(
+                    applicationContext,
+                    1,
+                    intent.putExtra("prayerTimeId", 1),
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
 
         map["preSunrise"] = preSunriseAlarmIntent
 
-        val dhuhrAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java, ).let { intent ->
+        val dhuhrAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java).let { intent ->
             PendingIntent.getBroadcast(
                 applicationContext,
                 2,
@@ -75,17 +81,18 @@ class MainActivity : ComponentActivity() {
         }
         map["dhuhr"] = dhuhrAlarmIntent
 
-        val preDhuhrAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java, ).let { intent ->
-            PendingIntent.getBroadcast(
-                applicationContext,
-                3,
-                intent.putExtra("prayerTimeId", 3),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
+        val preDhuhrAlarmIntent =
+            Intent(applicationContext, AlarmReceiver::class.java).let { intent ->
+                PendingIntent.getBroadcast(
+                    applicationContext,
+                    3,
+                    intent.putExtra("prayerTimeId", 3),
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
         map["preDhuhr"] = preDhuhrAlarmIntent
 
-        val asrAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java, ).let { intent ->
+        val asrAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java).let { intent ->
             PendingIntent.getBroadcast(
                 applicationContext,
                 4,
@@ -95,37 +102,40 @@ class MainActivity : ComponentActivity() {
         }
         map["asr"] = asrAlarmIntent
 
-        val preAsrAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java, ).let { intent ->
-            PendingIntent.getBroadcast(
-                applicationContext,
-                5,
-                intent.putExtra("prayerTimeId", 5),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
+        val preAsrAlarmIntent =
+            Intent(applicationContext, AlarmReceiver::class.java).let { intent ->
+                PendingIntent.getBroadcast(
+                    applicationContext,
+                    5,
+                    intent.putExtra("prayerTimeId", 5),
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
         map["preAsr"] = preAsrAlarmIntent
 
-        val maghribAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java, ).let { intent ->
-            PendingIntent.getBroadcast(
-                applicationContext,
-                6,
-                intent.putExtra("prayerTimeId", 6),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
+        val maghribAlarmIntent =
+            Intent(applicationContext, AlarmReceiver::class.java).let { intent ->
+                PendingIntent.getBroadcast(
+                    applicationContext,
+                    6,
+                    intent.putExtra("prayerTimeId", 6),
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
         map["maghrib"] = maghribAlarmIntent
 
-        val preMaghribAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java, ).let { intent ->
-            PendingIntent.getBroadcast(
-                applicationContext,
-                7,
-                intent.putExtra("prayerTimeId", 7),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
+        val preMaghribAlarmIntent =
+            Intent(applicationContext, AlarmReceiver::class.java).let { intent ->
+                PendingIntent.getBroadcast(
+                    applicationContext,
+                    7,
+                    intent.putExtra("prayerTimeId", 7),
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
         map["preMaghrib"] = preMaghribAlarmIntent
 
-        val ishaAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java, ).let { intent ->
+        val ishaAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java).let { intent ->
             PendingIntent.getBroadcast(
                 applicationContext,
                 8,
@@ -135,18 +145,37 @@ class MainActivity : ComponentActivity() {
         }
         map["isha"] = ishaAlarmIntent
 
-        val preIshaAlarmIntent = Intent(applicationContext, AlarmReceiver::class.java, ).let { intent ->
-            PendingIntent.getBroadcast(
-                applicationContext,
-                9,
-                intent.putExtra("prayerTimeId", 9),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
+        val preIshaAlarmIntent =
+            Intent(applicationContext, AlarmReceiver::class.java).let { intent ->
+                PendingIntent.getBroadcast(
+                    applicationContext,
+                    9,
+                    intent.putExtra("prayerTimeId", 9),
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
         map["preIsha"] = preIshaAlarmIntent
 
         return map
     }
+
 }
 
-
+@Composable
+fun PrayerTimesApp(alarmManager: AlarmManager?, pendingIntentMap: Map<String, PendingIntent>) {
+    val navController = rememberSwipeDismissableNavController()
+    SwipeDismissableNavHost(navController = navController, startDestination = "home_screen", modifier = Modifier.background(
+        Color.Black)) {
+        composable("home_screen") {
+            HomeScreen(
+                scalingLazyListState = scalingLazyListState,
+                alarmManager = alarmManager!!,
+                pendingIntentMap = pendingIntentMap,
+                navController = navController,
+            )
+        }
+        composable("settings_screen"){
+            SettingsScreen()
+        }
+    }
+}

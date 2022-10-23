@@ -113,6 +113,7 @@ fun getTimeLeft(prayerTimes: List<String?>): String {
     return "😴"
 }
 
+
 fun setAlarms(
     prayerTimes: List<String?>,
     alarmManager: AlarmManager,
