@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Wear Jetpack Compose"
-include ':app'
+include ':takvimi-wearos-compose'
