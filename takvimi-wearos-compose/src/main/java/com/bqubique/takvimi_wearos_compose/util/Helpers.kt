@@ -1,9 +1,14 @@
 package com.bqubique.takvimi_wearos_compose.util
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.util.Log
 import com.bqubique.takvimi_wearos_compose.R
+import com.bqubique.takvimi_wearos_compose.view.home.TAG
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 fun getRandomImage(index: Int): Int {
@@ -106,4 +111,81 @@ fun getTimeLeft(prayerTimes: List<String?>): String {
         }
     }
     return "😴"
+}
+
+fun setAlarms(
+    prayerTimes: List<String?>,
+    alarmManager: AlarmManager,
+    pendingIntentMap: Map<String, PendingIntent>,
+) {
+    val listOfCalendars = mutableListOf<Calendar>()
+
+    for (i in prayerTimes.indices) {
+        listOfCalendars.add(Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, prayerTimes[i]?.substring(0, 2)?.toInt()!!)
+            set(Calendar.MINUTE, prayerTimes[i]?.substring(5)?.toInt()!!)
+            set(Calendar.SECOND, 0)
+        })
+    }
+
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP, listOfCalendars[1].timeInMillis, pendingIntentMap["sunrise"]
+    )
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP,
+        listOfCalendars[1].timeInMillis - 900000,
+        pendingIntentMap["preSunrise"]
+    )
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP, listOfCalendars[2].timeInMillis, pendingIntentMap["dhuhr"]
+    )
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP,
+        listOfCalendars[2].timeInMillis - 900000,
+        pendingIntentMap["preDhuhr"]
+    )
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP, listOfCalendars[3].timeInMillis, pendingIntentMap["asr"]
+    )
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP,
+        listOfCalendars[3].timeInMillis - 900000,
+        pendingIntentMap["preAsr"]
+    )
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP, listOfCalendars[4].timeInMillis, pendingIntentMap["maghrib"]
+    )
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP,
+        listOfCalendars[4].timeInMillis - 900000,
+        pendingIntentMap["preMaghrib"]
+    )
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP, listOfCalendars[5].timeInMillis, pendingIntentMap["isha"]
+    )
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP,
+        listOfCalendars[5].timeInMillis - 900000,
+        pendingIntentMap["preIsha"]
+    )
+
+    Log.i(TAG, "setAlarms: Intents set for all prayer times and pre-prayer times.")
+}
+
+fun cancelAlarms(
+    alarmManager: AlarmManager,
+    pendingIntentMap: Map<String, PendingIntent>,
+) {
+    alarmManager.cancel(pendingIntentMap["sunrise"])
+    alarmManager.cancel(pendingIntentMap["preSunrise"])
+    alarmManager.cancel(pendingIntentMap["dhuhr"])
+    alarmManager.cancel(pendingIntentMap["preDhuhr"])
+    alarmManager.cancel(pendingIntentMap["asr"])
+    alarmManager.cancel(pendingIntentMap["preAsr"])
+    alarmManager.cancel(pendingIntentMap["maghrib"])
+    alarmManager.cancel(pendingIntentMap["preMaghrib"])
+    alarmManager.cancel(pendingIntentMap["isha"])
+    alarmManager.cancel(pendingIntentMap["preIsha"])
+    Log.i(TAG, "setAlarms: All intents canceled.")
 }
